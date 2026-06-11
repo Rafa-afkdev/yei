@@ -376,7 +376,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                                 id="precio_compra_usd"
                                 type="number"
                                 step="0.01"
-                                {...register("precio_compra_usd")}
+                                {...register("precio_compra_usd", { valueAsNumber: true })}
                                 placeholder="0.00"
                                 className="mt-1"
                             />
@@ -390,7 +390,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                                 id="precio_compra_bs"
                                 type="number"
                                 step="0.01"
-                                {...register("precio_compra_bs")}
+                                {...register("precio_compra_bs", { valueAsNumber: true })}
                                 placeholder="0.00"
                                 className="mt-1 bg-gray-50"
                                 readOnly
@@ -405,7 +405,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                                 id="precio_venta_usd"
                                 type="number"
                                 step="0.01"
-                                {...register("precio_venta_usd")}
+                                {...register("precio_venta_usd", { valueAsNumber: true })}
                                 placeholder="0.00"
                                 className="mt-1"
                             />
@@ -419,7 +419,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                                 id="precio_venta_bs"
                                 type="number"
                                 step="0.01"
-                                {...register("precio_venta_bs")}
+                                {...register("precio_venta_bs", { valueAsNumber: true })}
                                 placeholder="0.00"
                                 className="mt-1 bg-gray-50"
                                 readOnly
@@ -451,7 +451,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                             <Input
                                 id="stock_actual"
                                 type="number"
-                                {...register("stock_actual")}
+                                {...register("stock_actual", { valueAsNumber: true })}
                                 placeholder="0"
                                 className="mt-1"
                             />
@@ -464,7 +464,7 @@ export default function CreateUpdateProductosForm({ children, productoToUpdate, 
                             <Input
                                 id="stock_minimo"
                                 type="number"
-                                {...register("stock_minimo")}
+                                {...register("stock_minimo", { valueAsNumber: true })}
                                 placeholder="0"
                                 className="mt-1"
                             />
