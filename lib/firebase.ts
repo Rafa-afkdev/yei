@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, deleteApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, updateProfile } from "firebase/auth" 
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, updateDoc} from "firebase/firestore"
 import { getStorage, uploadString, getDownloadURL, ref } from "firebase/storage";
@@ -32,6 +32,18 @@ export const storage = getStorage(app);
 //?CREAR NUEVO USUARIO///
 export const createUser = async(user: {email: string, password:string}) => {
     return await createUserWithEmailAndPassword(auth, user.email, user.password)
+}
+
+//?CREAR NUEVO USUARIO POR EL ADMINISTRADOR (evita deslogueo)///
+export const createUserByAdmin = async(user: {email: string, password:string}) => {
+    const tempAppName = `temp-app-${Date.now()}`;
+    const tempApp = initializeApp(firebaseConfig, tempAppName);
+    const tempAuth = getAuth(tempApp);
+    const userCredential = await createUserWithEmailAndPassword(tempAuth, user.email, user.password);
+    const uid = userCredential.user.uid;
+    await tempAuth.signOut();
+    await deleteApp(tempApp);
+    return uid;
 }
 
 //??ENTRAR CON EMAIL & CONTRASEÑA//

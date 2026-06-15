@@ -15,14 +15,24 @@ export const useUser = () => {
   const route = useRouter();
 
   const protectedRoutes = "/dashboard";
-  //   const isInprotectedRoute = protectedRoutes.includes(pathName);
+
+  const normalizeUser = (u: any): User | undefined => {
+    if (!u) return undefined;
+    return {
+      ...u,
+      email: u.email || u.correo || "",
+      rol: u.rol === "ADMIN" ? "ADMINISTRADOR" : u.rol,
+      uid: u.uid || u.id || ""
+    };
+  };
 
   const getUserFromDB = async (uid: string) => {
     const path = `users/${uid}`;
     try {
       const res = await getDocument(path);
-      setUser(res);
-      setInLocalstorage("user", res);
+      const normalized = normalizeUser(res);
+      setUser(normalized);
+      setInLocalstorage("user", normalized);
     } catch (error) {
       console.error("Error fetching user from database:", error);
     }
@@ -34,7 +44,7 @@ export const useUser = () => {
       if (authUser) {
         const userInLocal = getFromLocalstorage("user");
         if (userInLocal) {
-          setUser(userInLocal);
+          setUser(normalizeUser(userInLocal));
         } else {
           await getUserFromDB(authUser.uid);
         }
