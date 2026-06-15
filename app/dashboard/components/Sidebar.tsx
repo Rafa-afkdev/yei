@@ -97,12 +97,12 @@ export default function Sidebar({ className = '' }: SidebarProps) {
       icon: Users,
       route: '/dashboard/usuarios'
     },
-    {
-      id: 'settings',
-      label: 'Configuración',
-      icon: Settings,
-      route: '/dashboard/configuracion'
-    }
+      // {
+      //   id: 'settings',
+      //   label: 'Configuración',
+      //   icon: Settings,
+      //   route: '/dashboard/configuracion'
+      // }
   ];
 
   useEffect(() => {
