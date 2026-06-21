@@ -9,7 +9,7 @@ import { Proveedor } from '@/interfaces/proveedor.interface';
 import { deleteDocument, getCollection } from '@/lib/firebase';
 import { orderBy } from 'firebase/firestore';
 import { motion } from 'framer-motion';
-import { Plus, Search, Users } from 'lucide-react';
+import { Plus, Search, Users, UserCheck } from 'lucide-react';
 import { showToast } from 'nextjs-toast-notify';
 import { useEffect, useState } from 'react';
 import CreateUpdateProveedorForm from './components/create-update-proveedor.form';
@@ -91,7 +91,7 @@ export default function ProveedoresPage() {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				{[
 					{ title: 'Total Proveedores', value: isLoading ? '...' : proveedores.length.toString(), icon: Users, color: 'from-green-500 to-green-600' },
-					{ title: 'Proveedores Activos', value: isLoading ? '...' : proveedores.filter(p => p.activo !== false).length.toString(), icon: Plus, color: 'from-blue-500 to-blue-600' },
+					{ title: 'Proveedores Activos', value: isLoading ? '...' : proveedores.filter(p => p.activo !== false).length.toString(), icon: UserCheck, color: 'from-blue-500 to-blue-600' },
 				].map((stat, index) => (
 					<motion.div
 						key={index}

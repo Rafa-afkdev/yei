@@ -9,7 +9,7 @@ import { StockMovimiento } from '@/interfaces/stock.interface';
 import { getCollection } from '@/lib/firebase';
 import { orderBy } from 'firebase/firestore';
 import { motion } from 'framer-motion';
-import { Plus, TrendingUp } from 'lucide-react';
+import { Plus, TrendingUp, Package } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CreateMovimientoStockForm from './components/create-movimiento-stock.form';
 import TableViewStock from './components/table-view-stock';
@@ -83,7 +83,7 @@ export default function StockPage() {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				{[
 					{ title: 'Total Movimientos', value: isLoading ? '...' : movimientos.length.toString(), icon: TrendingUp, color: 'from-yellow-500 to-orange-600' },
-					{ title: 'Entradas', value: isLoading ? '...' : movimientos.filter(m => m.tipo === 'entrada').length.toString(), icon: Plus, color: 'from-green-500 to-green-600' },
+					{ title: 'Entradas', value: isLoading ? '...' : movimientos.filter(m => m.tipo === 'entrada').length.toString(), icon: Package, color: 'from-green-500 to-green-600' },
 				].map((stat, index) => (
 					<motion.div
 						key={index}
