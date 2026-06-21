@@ -23,7 +23,7 @@ import { showToast } from "nextjs-toast-notify";
 import { VentaItem, Venta } from "@/interfaces/ventas.interface";
 import { Productos } from "@/interfaces/productos.interface";
 import { Cliente } from "@/interfaces/clientes.interface";
-import { getCollection, addDocument } from "@/lib/firebase";
+import { getCollection, addDocument, updateDocument } from "@/lib/firebase";
 import { fetchDollarRate, convertUsdToBs } from "@/lib/dollar-rate";
 import {
   Select,
@@ -52,27 +52,27 @@ export default function NuevaVentaPage() {
   const [notas, setNotas] = useState<string>("");
 
   // Obtener datos iniciales
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [productosData, clientesData, rateData] = await Promise.all([
-          getCollection("productos"),
-          getCollection("clientes"),
-          fetchDollarRate()
-        ]);
+  const loadData = async () => {
+    try {
+      const [productosData, clientesData, rateData] = await Promise.all([
+        getCollection("productos"),
+        getCollection("clientes"),
+        fetchDollarRate()
+      ]);
 
-        setProductos(productosData as Productos[]);
-        setClientes(clientesData as Cliente[]);
-        
-        if (rateData.success) {
-          setDollarRate(rateData.rate);
-        }
-      } catch (error) {
-        console.error("Error cargando datos:", error);
-        showToast.error("Error al cargar los datos");
+      setProductos(productosData as Productos[]);
+      setClientes(clientesData as Cliente[]);
+      
+      if (rateData.success) {
+        setDollarRate(rateData.rate);
       }
-    };
+    } catch (error) {
+      console.error("Error cargando datos:", error);
+      showToast.error("Error al cargar los datos");
+    }
+  };
 
+  useEffect(() => {
     loadData();
   }, []);
 
@@ -226,14 +226,26 @@ export default function NuevaVentaPage() {
 
       await addDocument("ventas", ventaBase);
       
+      // Descontar del stock de los productos vendidos
+      for (const item of itemsLimpios) {
+        const productoLocal = productos.find(p => p.id === item.producto_id);
+        if (productoLocal) {
+          const nuevoStock = Math.max(0, (productoLocal.stock_actual || 0) - item.cantidad);
+          await updateDocument(`productos/${item.producto_id}`, {
+            stock_actual: nuevoStock
+          });
+        }
+      }
+
       showToast.success(`Venta ${numeroVenta} procesada exitosamente`);
       
-      // Limpiar formulario
+      // Limpiar formulario y recargar datos
       setCarrito([]);
       setSelectedCliente(null);
       setDescuentoPorcentaje(0);
       setNotas("");
       setSearchTerm("");
+      await loadData();
 
     } catch (error) {
       console.error("Error procesando venta:", error);

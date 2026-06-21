@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { addDocument } from "@/lib/firebase";
+import { addDocument, getDocument, updateDocument } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { showToast } from "nextjs-toast-notify";
@@ -79,8 +79,33 @@ export default function CreateMovimientoStockForm({ children, productos, getMovi
       usuario: "admin", // Puedes cambiar esto por el usuario real
     };
     try {
+      // 1. Obtener el producto actual para saber su stock actual
+      const prodData = await getDocument(`productos/${movimiento.productoId}`) as any;
+      if (!prodData) {
+        throw new Error("El producto seleccionado no existe.");
+      }
+
+      // 2. Calcular el nuevo stock
+      const stockActual = typeof prodData.stock_actual === 'number' ? prodData.stock_actual : 0;
+      let nuevoStock = stockActual;
+      if (movimiento.tipo === "entrada") {
+        nuevoStock += normalizedMovimiento.cantidad;
+      } else if (movimiento.tipo === "salida") {
+        if (stockActual < normalizedMovimiento.cantidad) {
+          throw new Error(`Stock insuficiente. Stock actual: ${stockActual}`);
+        }
+        nuevoStock -= normalizedMovimiento.cantidad;
+      }
+
+      // 3. Registrar el movimiento
       await addDocument(path, normalizedMovimiento);
-      showToast.success("Movimiento registrado exitosamente");
+
+      // 4. Actualizar el stock del producto
+      await updateDocument(`productos/${movimiento.productoId}`, {
+        stock_actual: nuevoStock
+      });
+
+      showToast.success("Movimiento registrado y stock actualizado exitosamente");
       getMovimientosAction();
       setOpen(false);
       reset();
