@@ -29,12 +29,6 @@ export default function LayoutDashboard({children} : {children: React.ReactNode}
                         </h2>
                         <p className="text-slate-600 text-sm">Bienvenido de vuelta</p>
                     </div>
-                    
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-800 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white font-semibold text-sm">YP</span>
-                        </div>
-                    </div>
                 </div>
             </motion.header>
             
