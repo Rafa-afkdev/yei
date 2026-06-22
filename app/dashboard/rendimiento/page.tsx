@@ -28,6 +28,7 @@ import { showToast } from "nextjs-toast-notify";
 import { Venta, VentaItem } from "@/interfaces/ventas.interface";
 import { Productos } from "@/interfaces/productos.interface";
 import { Cliente } from "@/interfaces/clientes.interface";
+import { User } from "@/interfaces/user.interface";
 import { getCollection } from "@/lib/firebase";
 import { useUser } from "@/hooks/use-user";
 
@@ -60,7 +61,7 @@ interface DiaSemanaPerformance {
 const DIAS_SEMANA = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 export default function RendimientoPage() {
-  const currentUser = useUser() as any;
+  const currentUser = useUser() as User | undefined;
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [productos, setProductos] = useState<Productos[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -316,16 +317,16 @@ export default function RendimientoPage() {
             <div className="space-y-2 w-full lg:w-auto">
               <Label className="text-slate-700 font-semibold text-sm">Filtro rápido de período</Label>
               <div className="flex flex-wrap gap-2">
-                {[
+                {([
                   { key: "HOY", label: "Hoy" },
                   { key: "ULTIMOS_7_DIAS", label: "Últimos 7 Días" },
                   { key: "ESTE_MES", label: "Este Mes" },
                   { key: "PERSONALIZADO", label: "Personalizado" }
-                ].map((item) => (
+                ] as const).map((item) => (
                   <Button
                     key={item.key}
                     variant={filterRange === item.key ? "default" : "outline"}
-                    onClick={() => handleRangeChange(item.key as any)}
+                    onClick={() => handleRangeChange(item.key)}
                     className={`rounded-xl px-4 py-2 ${
                       filterRange === item.key
                         ? "bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/20"

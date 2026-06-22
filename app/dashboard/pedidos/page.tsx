@@ -565,7 +565,7 @@ export default function PedidosPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>Tipo de Entrega</Label>
-                      <Select value={tipoEntrega} onValueChange={(value: any) => setTipoEntrega(value)}>
+                      <Select value={tipoEntrega} onValueChange={(value) => setTipoEntrega(value as "DELIVERY" | "RETIRO")}>
                         <SelectTrigger className="mt-1 rounded-xl">
                           <SelectValue />
                         </SelectTrigger>
