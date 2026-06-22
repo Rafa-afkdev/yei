@@ -47,7 +47,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function UsuariosPage() {
-  const currentUser = useUser() as any;
+  const currentUser = useUser() as User | undefined;
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,12 +66,17 @@ export default function UsuariosPage() {
     setIsLoading(true);
     try {
       const data = await getCollection("users");
-      const usersArray = (data as any[]).map((u) => ({
-        ...u,
-        email: u.email || u.correo || "",
-        rol: u.rol === "ADMIN" ? "ADMINISTRADOR" : u.rol,
-        uid: u.uid || u.id || ""
-      })) as User[];
+      const usersArray = (data as unknown[] as Record<string, unknown>[]).map((u) => {
+        const email = (u.email as string) || (u.correo as string) || "";
+        const rol = u.rol === "ADMIN" ? "ADMINISTRADOR" : (u.rol as string);
+        const uid = (u.uid as string) || (u.id as string) || "";
+        return {
+          ...u,
+          email,
+          rol,
+          uid
+        } as unknown as User;
+      });
       setUsers(usersArray);
       setFilteredUsers(usersArray);
       calculateStats(usersArray);
@@ -96,6 +101,7 @@ export default function UsuariosPage() {
     if (currentUser) {
       getUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   useEffect(() => {
@@ -138,9 +144,10 @@ export default function UsuariosPage() {
     try {
       await sentResetEmail(email);
       showToast.success(`Correo de restablecimiento enviado a ${email}`);
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       console.error("Error al restablecer contraseña:", error);
-      showToast.error(error.message || "Error al enviar el correo de restablecimiento");
+      showToast.error(err.message || "Error al enviar el correo de restablecimiento");
     }
   };
 

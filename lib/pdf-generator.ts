@@ -8,7 +8,6 @@ export const downloadFacturaPDF = (factura: Factura) => {
   // Color palette
   const primaryColor = [79, 70, 229]; // Indigo-600
   const darkTextColor = [30, 41, 59]; // Slate-800
-  const lightTextColor = [100, 116, 139]; // Slate-500
 
   // 1. Header (Company Info)
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
@@ -109,7 +108,7 @@ export const downloadFacturaPDF = (factura: Factura) => {
   });
 
   // Get Y position after table
-  let currentY = (doc as any).lastAutoTable.finalY + 10;
+  let currentY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
 
   // Check if we need a new page to draw summary and notes
   if (currentY > 240) {
