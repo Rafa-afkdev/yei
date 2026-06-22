@@ -72,7 +72,7 @@ export default function Navigation() {
             >
               Iniciar Sesión
             </motion.button> */}
-            <motion.button
+            {/* <motion.button
               whileHover={{ 
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(168, 85, 247, 0.4)"
@@ -82,7 +82,7 @@ export default function Navigation() {
             >
               <span>Iniciar Sesión</span>
               <ArrowRight className="w-4 h-4" />
-            </motion.button>
+            </motion.button> */}
           </div>
 
           {/* Mobile Menu Button */}
