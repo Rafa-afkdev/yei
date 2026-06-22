@@ -28,6 +28,7 @@ import { Venta } from "@/interfaces/ventas.interface";
 import { getCollection, deleteDocument } from "@/lib/firebase";
 import CreateFacturaForm from "./components/create-factura-form";
 import FacturaDetailModal from "./components/factura-detail-modal";
+import { downloadFacturaPDF } from "@/lib/pdf-generator";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -327,24 +328,32 @@ export default function FacturasPage() {
                   key={factura.id}
                   className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  <div 
+                    className="flex items-center space-x-4 cursor-pointer flex-1"
+                    onClick={() => setSelectedFactura(factura)}
+                  >
+                    <div className="w-10 h-10 bg-linear-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold shrink-0">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-gray-900">
                           {factura.numero_factura}
                         </h3>
+                        {factura.idfactura && (
+                          <span className="text-xs text-gray-500 bg-slate-100 px-2 py-0.5 rounded-full font-mono">
+                            ID: {factura.idfactura}
+                          </span>
+                        )}
                         {getEstadoBadge(factura.estado)}
                       </div>
-                      <div className="text-sm text-gray-500 space-y-1">
+                      <div className="text-sm text-gray-500 space-y-1 mt-1">
                         {factura.cliente_nombre && (
                           <p>👤 {factura.cliente_nombre}</p>
                         )}
                         <p>📅 {formatDate(factura.fecha_emision)}</p>
                         <div className="flex items-center gap-4">
-                          <span className="font-semibold text-green-600">
+                          <span className="font-bold text-green-600">
                             ${factura.total_usd.toFixed(2)}
                           </span>
                           <span className="text-xs">
@@ -366,7 +375,7 @@ export default function FacturasPage() {
                         <Eye className="w-4 h-4 mr-2" />
                         Ver Detalles
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => downloadFacturaPDF(factura)}>
                         <Download className="w-4 h-4 mr-2" />
                         Descargar PDF
                       </DropdownMenuItem>

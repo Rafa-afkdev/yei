@@ -134,6 +134,7 @@ export default function CreateFacturaForm({
             }
 
             const factura: Omit<Factura, 'id'> = {
+                idfactura: numeroFactura,
                 numero_factura: numeroFactura,
                 venta_id: selectedVenta.id,
                 numero_venta: selectedVenta.numero_venta,

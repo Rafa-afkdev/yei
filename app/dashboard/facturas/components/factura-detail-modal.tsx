@@ -20,6 +20,7 @@ import {
   FileText
 } from "lucide-react";
 import { Factura } from "@/interfaces/facturas.interface";
+import { downloadFacturaPDF } from "@/lib/pdf-generator";
 
 interface FacturaDetailModalProps {
   factura: Factura;
@@ -61,8 +62,7 @@ export default function FacturaDetailModal({
   };
 
   const handleDownloadPDF = () => {
-    // Aquí implementarías la lógica para generar y descargar el PDF
-    console.log("Descargar PDF de factura:", factura.numero_factura);
+    downloadFacturaPDF(factura);
   };
 
   const handleSendEmail = () => {
@@ -75,9 +75,14 @@ export default function FacturaDetailModal({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Factura {factura.numero_factura}
+            <DialogTitle className="flex items-center gap-2 flex-wrap">
+              <FileText className="w-5 h-5 text-indigo-600" />
+              <span>Factura {factura.numero_factura}</span>
+              {(factura.idfactura || factura.id) && (
+                <span className="text-sm font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                  ID: {factura.idfactura || factura.id}
+                </span>
+              )}
             </DialogTitle>
             <div className="flex items-center gap-2">
               {getEstadoBadge(factura.estado)}

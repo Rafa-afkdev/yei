@@ -2,6 +2,7 @@ import { VentaItem } from "./ventas.interface";
 
 export interface Factura {
   id?: string;
+  idfactura?: string;
   numero_factura: string;
   venta_id?: string;
   numero_venta?: string;
