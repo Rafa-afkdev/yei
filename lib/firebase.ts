@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Import the functions you need from the SDKs you need
 import { initializeApp, deleteApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, updateProfile } from "firebase/auth" 
+import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth" 
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, updateDoc} from "firebase/firestore"
 import { getStorage, uploadString, getDownloadURL, ref } from "firebase/storage";
 
@@ -60,7 +60,7 @@ export const updateUser = (user: { displayName?: string | null; photoURL?: strin
 //?CERRAR SESION//
 export const sigOutAccount = () => {
     localStorage.removeItem('user');
-    return auth.signOut();
+    return signOut(auth);
 }
 
 //? RECUPERAR CONTRASEÑA//

@@ -27,6 +27,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
+import { sigOutAccount } from '../../../lib/firebase';
 
 interface MenuItem {
   id: string;
@@ -291,6 +292,10 @@ export default function Sidebar({ className = '' }: SidebarProps) {
           <Button
             variant="destructive"
             className="w-full justify-start gap-3 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200"
+            onClick={async () => {
+              await sigOutAccount();
+              router.push('/auth');
+            }}
           >
             <LogOut className="w-5 h-5" />
             {!isCollapsed && <span className="font-medium">Cerrar Sesión</span>}
